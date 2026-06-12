@@ -1,14 +1,12 @@
 <div align="center">
 
-# 🎮 ROCKNIX for GameMT E5 Plus
+<img src="docs/images/banner.jpg" alt="ROCKNIX for GameMT E5 Plus" width="100%">
 
 **Turn the GameMT E5 Plus handheld into a real Linux retro-gaming console.**
 
 [![CI](https://github.com/yibudak/rocknix-e5p/actions/workflows/ci.yml/badge.svg)](https://github.com/yibudak/rocknix-e5p/actions/workflows/ci.yml) [![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html) [![Platform](https://img.shields.io/badge/Platform-ROCKNIX-orange.svg)](https://github.com/ROCKNIX/distribution) [![SoC](https://img.shields.io/badge/SoC-RK3566-green.svg)](https://www.rock-chips.com/uploads/pdf/2022.8.26/191/RK3566%20Brief%20Datasheet.pdf)
 
-[🕹️ What Works](#️-what-works) · [💾 Install](#-install) · [🔨 Build](#-build-it-yourself) · [📚 Docs](#-documentation)
-
-<img src="docs/images/hero.jpg" width="560" alt="GameMT E5 Plus booting ROCKNIX, joystick LEDs glowing through the transparent shell">
+[🕹️ What Works](#️-what-works) · [📸 Gallery](#-gallery) · [💾 Install](#-install) · [🔨 Build](#-build-it-yourself) · [📚 Docs](#-documentation)
 
 </div>
 
@@ -51,10 +49,23 @@ Everything below is verified **on real hardware**, not assumed:
 | 🎯 | Emulator deep-testing | 🧪 In progress | PSP, PS1, Dreamcast, N64, SNES, GBA test library |
 | 📳 | Rumble | ❌ No hardware | The board has no vibration motor — not a software issue |
 
+---
+
+## 📸 Gallery
+
 <div align="center">
-
-<img src="docs/images/emulationstation.jpg" width="560" alt="EmulationStation system list running on the E5 Plus">
-
+<table>
+  <tr>
+    <td align="center">
+      <img src="docs/images/hero.jpg" width="400" alt="GameMT E5 Plus booting ROCKNIX, joystick LEDs glowing through the transparent shell"><br>
+      <sub>Boot splash — joystick LEDs shining through the shell</sub>
+    </td>
+    <td align="center">
+      <img src="docs/images/emulationstation.jpg" width="400" alt="EmulationStation system list running on the E5 Plus"><br>
+      <sub>EmulationStation, ready to play</sub>
+    </td>
+  </tr>
+</table>
 </div>
 
 ---
