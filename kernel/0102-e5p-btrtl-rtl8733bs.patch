@@ -1,6 +1,6 @@
---- a/drivers/bluetooth/btrtl.c	2026-06-11 12:49:32.943948005 +0000
-+++ b/drivers/bluetooth/btrtl.c	2026-06-11 12:49:32.947948005 +0000
-@@ -188,6 +188,13 @@
+--- a/drivers/bluetooth/btrtl.c
++++ b/drivers/bluetooth/btrtl.c
+@@ -188,6 +188,14 @@
  	  .cfg_name = "rtl_bt/rtl8723fu_config",
  	  .hw_info  = "rtl8733bu" },
  
@@ -11,10 +11,11 @@
 +	  .fw_name  = "rtl_bt/rtl8733bs_fw",
 +	  .cfg_name = "rtl_bt/rtl8733bs_config",
 +	  .hw_info  = "rtl8733bs" },
- 
++
  	/* 8821A */
  	{ IC_INFO(RTL_ROM_LMP_8821A, 0xa, 0x6, HCI_USB),
-@@ -1539,6 +1546,8 @@
+ 	  .config_needed = false,
+@@ -1538,6 +1546,8 @@
  MODULE_FIRMWARE("rtl_bt/rtl8723d_fw.bin");
  MODULE_FIRMWARE("rtl_bt/rtl8723d_config.bin");
  MODULE_FIRMWARE("rtl_bt/rtl8723ds_fw.bin");

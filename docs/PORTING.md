@@ -82,3 +82,17 @@ This port currently targets **ROCKNIX `20260601`**. Portable artifacts:
 7. `quirks/GameMT E5 Plus/` → `packages/hardware/quirks/devices/`
 8. `system.d/e5p-bt-detach.service` → quirks package `system.d/` +
    `enable_service` in `post_install`
+9. `E5_Plus` subdevice in the project's dtb/config XML
+   (`mkimage_options="dtb,extlinux,uboot"`,
+   `fdt="device_trees/rk3566-e5p.dtb"`, `fdt_type="fdt"`) - produces a
+   ready-to-boot image with the DTB preselected in `extlinux.conf`
+10. `u-boot-E5_Plus` package (copy of the RK3566 `u-boot-Generic` package
+    with `PKG_NAME` changed) - the per-subdevice u-boot the image build
+    expects
+
+Note (current ROCKNIX trees): RK3566 lives under
+`projects/ROCKNIX/devices/RK3566` and the kernel is the `packages/linux`
+7.x line; the legacy `projects/Rockchip` path applies to the 20250517-era
+tree only. The `0102` patch must apply on top of ROCKNIX's own patch set
+(the `8733BU` btrtl entry it anchors on comes from a ROCKNIX patch, not
+from the pristine kernel tarball).

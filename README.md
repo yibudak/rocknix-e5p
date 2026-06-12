@@ -72,31 +72,27 @@ Everything below is verified **on real hardware**, not assumed:
 
 ## 💾 Install
 
-> 📦 **No prebuilt image is published yet.** The first release is planned once
-> emulator testing finishes. Until then you can
-> [build the image yourself](#-build-it-yourself).
+> 📦 Grab the latest `ROCKNIX-RK3566.aarch64-*-E5_Plus.img.7z` from
+> [**Releases**](https://github.com/yibudak/rocknix-e5p/releases). The
+> `E5_Plus` image is preconfigured for this device - no config editing needed.
+> You can also [build it yourself](#-build-it-yourself).
 
-You need: a **microSD card** (16 GB+, A1-class recommended) and the built
-`.img.gz` image.
+You need: a **microSD card** (16 GB+, A1-class recommended).
 
-**1. Flash the image to the SD card** (macOS/Linux example):
+**1. Extract and flash the image** (macOS/Linux example):
 
 ```bash
-gunzip -c ROCKNIX-RK3566.aarch64-*-Generic.img.gz | sudo dd of=/dev/rdiskX bs=1m status=progress
+7z x ROCKNIX-RK3566.aarch64-*-E5_Plus.img.7z
+sudo dd if=ROCKNIX-RK3566.aarch64-*-E5_Plus.img of=/dev/rdiskX bs=1m status=progress
 ```
 
-**2. Point the bootloader at the right device tree.** Open the SD card's first
-(FAT) partition and edit `extlinux/extlinux.conf` - replace the `FDTDIR` line:
-
-```text
-FDT /device_trees/rk3566-e5p.dtb
-```
-
-This step is required: the E5 Plus isn't in U-Boot's board list, so the DTB
-must be set by hand.
-
-**3. Insert the SD card and power on.** ROCKNIX boots into EmulationStation.
+**2. Insert the SD card and power on.** ROCKNIX boots into EmulationStation.
 Connect to WiFi, enable SSH if you like, drop your ROMs into `/storage/roms`.
+
+> ℹ️ If you flash a **Generic** RK3566 image instead, you must edit
+> `extlinux/extlinux.conf` on the SD card's FAT partition and replace the
+> `FDTDIR` line with `FDT /device_trees/rk3566-e5p.dtb` - the E5 Plus isn't
+> in U-Boot's board list. The `E5_Plus` image already has this set.
 
 Detailed walkthrough with troubleshooting: [docs/FLASHING.md](docs/FLASHING.md)
 
