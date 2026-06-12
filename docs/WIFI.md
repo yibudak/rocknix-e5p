@@ -14,7 +14,8 @@ Verified runtime state:
 - Interface: `wlan0`
 - `ip link set wlan0 up`: OK
 - `iw dev wlan0 scan`: OK
-- `wpa_supplicant` association on 2.4 GHz: OK
+- Association on both 2.4 GHz and 5 GHz: OK (dual-band 1T1R; ~150 Mbit
+  link rate at 40 MHz on 5 GHz)
 - Static development IP: OK
 - SSH over WiFi: OK
 

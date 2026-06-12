@@ -39,7 +39,7 @@ Everything below is verified **on real hardware**, not assumed:
 | 📺 | Display (5" 720×1280, 60 Hz) | ✅ Works | Custom panel driver, correct colors & orientation |
 | 🎮 | Buttons, D-pad, analog sticks | ✅ Works | Full mapping in EmulationStation & emulators |
 | 🔊 | Speakers & headphone jack | ✅ Works | Auto jack detection, volume tuned to stock levels |
-| 📶 | WiFi (2.4 GHz) | ✅ Works | Including mixed WPA2/WPA3 home networks |
+| 📶 | WiFi (2.4 + 5 GHz) | ✅ Works | Both bands verified; including mixed WPA2/WPA3 home networks |
 | 🎧 | Bluetooth | ✅ Works | Pairing and BLE scan verified |
 | 🔋 | Battery % & charging | ✅ Works | Calibration data taken from stock firmware |
 | 💡 | LEDs | ✅ Works | On/off control from the settings menu |
