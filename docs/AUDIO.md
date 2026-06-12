@@ -1,4 +1,4 @@
-# E5P Audio: rk817 speakers — WORKING (2026-06-11)
+# E5P Audio: rk817 speakers - WORKING (2026-06-11)
 
 ## Board wiring quirk (from stock DT)
 
@@ -10,10 +10,10 @@ enabled by GPIO4_C2. RK817's own SPKOUT pin is wired to NOTHING.
 Consequences on mainline (our dts uses mainline rk817 codec +
 simple-audio-card "rk817_ext"):
 
-- `Playback Mux` must stay **'HP'** — selecting 'SPK' routes to the
+- `Playback Mux` must stay **'HP'** - selecting 'SPK' routes to the
   unconnected SPKOUT = total silence.
 - Amp enable handled by the `speaker-amp` node in our dts
-  (`enable-gpios = <&gpio4 RK_PC2 GPIO_ACTIVE_HIGH>`) — shows as gpio4-18
+  (`enable-gpios = <&gpio4 RK_PC2 GPIO_ACTIVE_HIGH>`) - shows as gpio4-18
   "enable out hi" in debugfs. Already worked.
 - Headphone jack detect = gpio4-22, input, IRQ (works, event2 input dev).
 
@@ -30,9 +30,9 @@ after the RK3566 platform quirk, so the device values win.
 
 ## Playback notes
 
-- ALSA hw is held by pipewire — `aplay -D plughw` fails "busy"; use
+- ALSA hw is held by pipewire - `aplay -D plughw` fails "busy"; use
   `XDG_RUNTIME_DIR=/var/run/0-runtime-dir pw-play file.wav`.
-- No alsa-restore/asound.state in this image; mixer resets at boot — hence
+- No alsa-restore/asound.state in this image; mixer resets at boot - hence
   the boot-time quirk.
 - Per-app/UI volume = wireplumber sink volume (`wpctl set-volume
   @DEFAULT_AUDIO_SINK@ 0.6`); sink IDs shuffle between boots, use
@@ -41,7 +41,7 @@ after the RK3566 platform quirk, so the device values win.
 ## Idle hiss / amp power gate (2026-06-11)
 
 ES keeps an SDL audio stream open for its whole lifetime (AudioManager inits
-SDL_mixer at construction; streams silence continuously — pw-top shows the
+SDL_mixer at construction; streams silence continuously - pw-top shows the
 sink permanently "running"). DAPM therefore never powers down the path and
 the external speaker amp stays enabled: audible idle hiss + wasted power.
 No ES setting closes it (bgmusic off doesn't help).

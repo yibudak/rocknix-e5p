@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-2.0
 # GameMT E5 Plus audio defaults. Board quirk (stock dts: out-l2spk-r2hp +
 # spk-ctl-gpios): the speakers are fed from the HP output path through an
-# external amp (GPIO4_C2, driven by the speaker-amp dts node) — Playback Mux
+# external amp (GPIO4_C2, driven by the speaker-amp dts node) - Playback Mux
 # must stay HP; RK817's SPKOUT pin is wired to nothing. Master 96% matches
 # the stock Android DAC tuning (-3.75 dB, hp-volume 0x0a); the boot default
 # of 100% clips on these small speakers.

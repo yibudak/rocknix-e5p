@@ -2,7 +2,7 @@
 
 All builds run **inside the Docker container `e5p-build`** (arm64 native, Ubuntu 24.04 base). The ROCKNIX source tree inside the container is at `/root/rocknix`.
 
-## Prerequisites (host — macOS with Apple Silicon)
+## Prerequisites (host - macOS with Apple Silicon)
 
 - Docker Desktop configured for **12 CPU / 12 GB RAM** (minimum).
 - Container `e5p-build` created from the ROCKNIX `Dockerfile`.
@@ -83,13 +83,13 @@ low-level live-test steps.
 
 ## Build Gotchas (Already Fixed in Current Container)
 
-1. **rsync 3.3.0 buffer overflow** — ROCKNIX's bundled `toolchain/bin/rsync` crashes on glibc 2.39. Fix: `cp -f /usr/bin/rsync <toolchain>/bin/rsync`. Apply to **both** `.aarch64` and `.arm` build roots if they ever rebuild.
-2. **Dead source mirrors** — packages like `keyutils` and `rtmpdump` have dead upstream URLs. Fix: download real tarballs into `sources/<pkg>/`, create `.url` + `.sha256` stamp files, and pin `PKG_SHA256` in `package.mk`.
-3. **Git orphaned commits** — upstream may force-push away pinned commits. Fix: pick the nearest surviving commit by date to the release tag.
-4. **emulationstation CMake working directory** — `checkgamesdb` target runs a Python script with no `WORKING_DIRECTORY`. Fix: `packages/ui/emulationstation/patches/0001-checkgamesdb-working-dir.patch`.
-5. **OOM during parallel linking** — `mame-lr` can exhaust 12 GB RAM with 12 jobs. Fix: rebuild individually with `MAKEFLAGS="-j4"`.
-6. **Missing curl** — install `curl` in the container (wine's install step needs it).
-7. **DuckStation AppImage 404** — pin a surviving numbered release and update asset name.
-8. **portmaster compat.zip drift** — upstream renamed `compat.zip` → `compat.tar.gz`. Fix: update URL and switch `unzip` to `tar` in `package.mk`.
+1. **rsync 3.3.0 buffer overflow** - ROCKNIX's bundled `toolchain/bin/rsync` crashes on glibc 2.39. Fix: `cp -f /usr/bin/rsync <toolchain>/bin/rsync`. Apply to **both** `.aarch64` and `.arm` build roots if they ever rebuild.
+2. **Dead source mirrors** - packages like `keyutils` and `rtmpdump` have dead upstream URLs. Fix: download real tarballs into `sources/<pkg>/`, create `.url` + `.sha256` stamp files, and pin `PKG_SHA256` in `package.mk`.
+3. **Git orphaned commits** - upstream may force-push away pinned commits. Fix: pick the nearest surviving commit by date to the release tag.
+4. **emulationstation CMake working directory** - `checkgamesdb` target runs a Python script with no `WORKING_DIRECTORY`. Fix: `packages/ui/emulationstation/patches/0001-checkgamesdb-working-dir.patch`.
+5. **OOM during parallel linking** - `mame-lr` can exhaust 12 GB RAM with 12 jobs. Fix: rebuild individually with `MAKEFLAGS="-j4"`.
+6. **Missing curl** - install `curl` in the container (wine's install step needs it).
+7. **DuckStation AppImage 404** - pin a surviving numbered release and update asset name.
+8. **portmaster compat.zip drift** - upstream renamed `compat.zip` → `compat.tar.gz`. Fix: update URL and switch `unzip` to `tar` in `package.mk`.
 
 **Always verify real build success with `grep realexit=` in the build output.** The bash `-lc` wrapper can exit 0 even on failures. Also confirm the `[NNN/667]` counter advanced past any prior failure point.

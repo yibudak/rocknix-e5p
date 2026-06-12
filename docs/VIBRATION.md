@@ -1,7 +1,7 @@
 # E5P Vibration: NO MOTOR POPULATED (2026-06-11)
 
 Stock DT has a gpio-leds entry "motor" = **GPIO3_C4** (gpio3-20 / global 116,
-active high) — reference-design leftover. Verified end to end:
+active high) - reference-design leftover. Verified end to end:
 
 - ROCKNIX: pin driven as plain GPIO (devmem, mux func0) AND as pwm14_m0
   (alt-func 1) through the rocknix-singleadc-joypad FF_RUMBLE path
@@ -9,7 +9,7 @@ active high) — reference-design leftover. Verified end to end:
 - Stock Android (ground truth): `echo 255 > /sys/class/leds/motor/brightness`
   → debugfs shows gpio-116 "out hi" → no vibration. Android has NO vibrator
   HAL (vendor vintf manifest lacks it), no timed_output, and the stock joypad
-  node has no pwms property — the led path is the only motor path stock ever
+  node has no pwms property - the led path is the only motor path stock ever
   had, and it does nothing.
 
 Conclusion: motor not mounted on this unit. Reddit claims of E5P rumble are

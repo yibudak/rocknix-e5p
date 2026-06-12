@@ -15,12 +15,12 @@
 ## 🧐 What is this?
 
 The **GameMT E5 Plus** is a budget retro handheld (Rockchip RK3566, 5" screen)
-that ships with Android. Android is a clunky way to play retro games — so this
+that ships with Android. Android is a clunky way to play retro games - so this
 project ports [**ROCKNIX**](https://github.com/ROCKNIX/distribution), the
 open-source Linux gaming distribution, to it.
 
 You get EmulationStation, RetroArch and dozens of emulators booting straight
-from a microSD card. **The internal storage is never touched** — pull the SD
+from a microSD card. **The internal storage is never touched** - pull the SD
 card out and the device is back on stock Android, like nothing happened.
 
 This is the **first working Linux port** for this device: earlier community
@@ -47,7 +47,7 @@ Everything below is verified **on real hardware**, not assumed:
 | ⚡ | CPU boost to 1.99 GHz | ✅ Works | Vendor-binned top speed, toggle in settings |
 | 🖥️ | Mini-HDMI output | 🧪 Not tested yet | |
 | 🎯 | Emulator deep-testing | 🧪 In progress | PSP, PS1, Dreamcast, N64, SNES, GBA test library |
-| 📳 | Rumble | ❌ No hardware | The board has no vibration motor — not a software issue |
+| 📳 | Rumble | ❌ No hardware | The board has no vibration motor - not a software issue |
 
 ---
 
@@ -58,7 +58,7 @@ Everything below is verified **on real hardware**, not assumed:
   <tr>
     <td align="center">
       <img src="docs/images/hero.jpg" width="400" alt="GameMT E5 Plus booting ROCKNIX, joystick LEDs glowing through the transparent shell"><br>
-      <sub>Boot splash — joystick LEDs shining through the shell</sub>
+      <sub>Boot splash - joystick LEDs shining through the shell</sub>
     </td>
     <td align="center">
       <img src="docs/images/emulationstation.jpg" width="400" alt="EmulationStation system list running on the E5 Plus"><br>
@@ -86,7 +86,7 @@ gunzip -c ROCKNIX-RK3566.aarch64-*-Generic.img.gz | sudo dd of=/dev/rdiskX bs=1m
 ```
 
 **2. Point the bootloader at the right device tree.** Open the SD card's first
-(FAT) partition and edit `extlinux/extlinux.conf` — replace the `FDTDIR` line:
+(FAT) partition and edit `extlinux/extlinux.conf` - replace the `FDTDIR` line:
 
 ```text
 FDT /device_trees/rk3566-e5p.dtb
@@ -117,14 +117,14 @@ python3 scripts/integrate_postpatch.py
 PROJECT=Rockchip DEVICE=RK3566 ARCH=aarch64 ./scripts/build_distro
 ```
 
-Full guide — container setup, kernel-only rebuilds, known build gotchas:
+Full guide - container setup, kernel-only rebuilds, known build gotchas:
 [docs/BUILD.md](docs/BUILD.md)
 
 ---
 
 ## 📚 Documentation
 
-Every subsystem has its own write-up, including how it was debugged — useful
+Every subsystem has its own write-up, including how it was debugged - useful
 if you're porting Linux to a similar RK3566 device:
 
 | Doc | What's inside |
@@ -144,7 +144,7 @@ if you're porting Linux to a similar RK3566 device:
 
 ## 🤝 Contributing
 
-Testing on real hardware is the most valuable contribution — flash, play,
+Testing on real hardware is the most valuable contribution - flash, play,
 report. Bug reports, documentation fixes and PRs are all welcome.
 See [CONTRIBUTING.md](CONTRIBUTING.md).
 
@@ -152,9 +152,9 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## 📜 License
 
-- `kernel/panel-e5p.c` — **GPL-2.0**
-- `dts/rk3566-e5p.dts` — **GPL-2.0+ OR MIT**
-- Scripts & docs — **GPL-2.0** or **MIT** where noted
+- `kernel/panel-e5p.c` - **GPL-2.0**
+- `dts/rk3566-e5p.dts` - **GPL-2.0+ OR MIT**
+- Scripts & docs - **GPL-2.0** or **MIT** where noted
 
 See [LICENSE](LICENSE) for the full text.
 
@@ -190,4 +190,4 @@ Maintained by [**@yibudak**](https://github.com/yibudak)
 
 This is an **unofficial community port**, not affiliated with GameMT or
 ROCKNIX. Use at your own risk. Keep the stock eMMC untouched and boot from
-**SD card only** — that's what makes the whole thing risk-free.
+**SD card only** - that's what makes the whole thing risk-free.

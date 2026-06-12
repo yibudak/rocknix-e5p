@@ -1,14 +1,14 @@
-# E5P LEDs: ES control — WORKING (2026-06-11)
+# E5P LEDs: ES control - WORKING (2026-06-11)
 
 ## Hardware
 
-4 plain GPIO LEDs (on/off only, no PWM — brightness impossible):
+4 plain GPIO LEDs (on/off only, no PWM - brightness impossible):
 
 | LED | Role |
 |---|---|
 | yglled / ygrled | joystick ring LEDs (GPIO4_C4/C5) |
 | workled, led3 | status LEDs |
-| `mmc0::` | eMMC activity trigger (auto-blinks on I/O — this was the "flicker" seen during display work, plus reboot churn + 3.3V rail dips from panel init; all benign) |
+| `mmc0::` | eMMC activity trigger (auto-blinks on I/O - this was the "flicker" seen during display work, plus reboot churn + 3.3V rail dips from panel init; all benign) |
 
 ## ES integration (ROCKNIX quirks system)
 
@@ -25,10 +25,10 @@
 
 ## Files
 
-- `quirks/GameMT E5 Plus/bin/ledcontrol` — the E5P LED script; the
+- `quirks/GameMT E5 Plus/bin/ledcontrol` - the E5P LED script; the
   `/usr/bin/ledcontrol` dispatcher picks it up automatically once it is
   installed under `quirks/devices/GameMT E5 Plus/bin/` in the image.
-- `quirks/GameMT E5 Plus/010-led_control` — sets `DEVICE_LED_CONTROL=true`
+- `quirks/GameMT E5 Plus/010-led_control` - sets `DEVICE_LED_CONTROL=true`
   and `DEVICE_LED_BRIGHTNESS=false` (hides the brightness menu, which this
   hardware can't honor). Runs after the platform quirk, so it wins.
 

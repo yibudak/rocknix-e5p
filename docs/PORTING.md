@@ -18,13 +18,13 @@ run a mainline display stack on this panel before this port.
 
 ## Key fixes
 
-### `kernel/panel-e5p.c` — DRM panel driver
+### `kernel/panel-e5p.c` - DRM panel driver
 - Replays the exact 112-command DCS initialization sequence captured from
   stock Android.
 - Compatible string: `gamemt,e5p-panel`.
 - Based on mainline `panel-himax-hx8394.c`.
 
-### `kernel/0101-e5p-display-android-parity.patch` — display pipeline
+### `kernel/0101-e5p-display-android-parity.patch` - display pipeline
 - The panel DDIC latches its frame origin once at video-mode start; any
   mismatch with the stock register configuration shows up as a permanent
   line shift and/or color-channel rotation.
@@ -32,25 +32,25 @@ run a mainline display stack on this panel before this port.
   every difference (lane rate 432 Mbps, LP command mode, EOT/HSE flags, PHY
   timer constants). Full forensic write-up in [DISPLAY.md](DISPLAY.md).
 
-### `dts/rk3566-e5p.dts` — device tree
+### `dts/rk3566-e5p.dts` - device tree
 - Critical fix: `vdd_cpu` → `silergy,syr827 @ i2c0 0x40`.
 - `rotation = <90>` for correct landscape orientation.
 - ADC volume keys, joypad buttons/sticks, RK817 audio + battery calibration
   from stock firmware, UART1 serdev Bluetooth node, speaker-amp GPIO.
 
 ### RTL8733BS WiFi
-- The board reports SDIO ID `024C:B733` — a Realtek RTL8733BS, despite the
+- The board reports SDIO ID `024C:B733` - a Realtek RTL8733BS, despite the
   stock DT claiming `ap6255` (Broadcom). `brcmfmac`, staging `r8723bs`, and
   patched mainline `rtw88` drivers were all tested and rejected.
 - The Realtek vendor driver is patched for Linux 6.12 and integrated as a
   ROCKNIX kernel-module package (`scripts/patch_rtl8733bs_612.py`).
 - FullMAC SAE never completes association, so the patch drops the
-  `NL80211_FEATURE_SAE` flag — iwd falls back to WPA2-PSK and
+  `NL80211_FEATURE_SAE` flag - iwd falls back to WPA2-PSK and
   WPA3-transition networks connect. Details in [WIFI.md](WIFI.md).
 
 ### RTL8733BS Bluetooth
 - BT half of the combo chip on UART1 (Realtek H5 three-wire). Mainline
-  `btrtl` lacks the 8733BS entry — added by
+  `btrtl` lacks the 8733BS entry - added by
   `kernel/0102-e5p-btrtl-rtl8733bs.patch`.
 - Firmware extracted from the stock vendor partition
   (`firmware/rtl_bt/`).
@@ -59,12 +59,12 @@ run a mainline display stack on this panel before this port.
   [BLUETOOTH.md](BLUETOOTH.md).
 
 ### Device quirks (`quirks/GameMT E5 Plus/`)
-- `010-led_control` — LED menu in EmulationStation; hides the brightness
+- `010-led_control` - LED menu in EmulationStation; hides the brightness
   menu (plain GPIO LEDs, no PWM).
-- `050-audio_path` — speakers are wired to the HP path through an external
+- `050-audio_path` - speakers are wired to the HP path through an external
   amp; RK817's SPKOUT pin is unconnected. Forces Playback Mux = HP and the
   Android-equivalent master volume.
-- `bin/ledcontrol`, `bin/bt-detach` — device-specific helpers picked up by
+- `bin/ledcontrol`, `bin/bt-detach` - device-specific helpers picked up by
   ROCKNIX's quirk dispatcher.
 
 ## Re-applying on a ROCKNIX rebase

@@ -1,7 +1,7 @@
-# E5P Display: Vertical Shift + Color Rotation — Root Cause & Fix
+# E5P Display: Vertical Shift + Color Rotation - Root Cause & Fix
 
 **Status: FIXED (2026-06-11).** Zero shift, correct colors, verified with a
-calibration pattern at panel level (screenshots can't see this class of bug —
+calibration pattern at panel level (screenshots can't see this class of bug -
 they capture the composited buffer, not what the panel latches).
 
 ## Symptoms
@@ -9,7 +9,7 @@ they capture the composited buffer, not what the panel latches).
 - Whole UI shifted up by a constant number of lines; the overflowing top part
   wrapped in from the bottom.
 - Sometimes additionally R→B→G→R color channel rotation.
-- Composited screenshots (grim) looked perfect — defect existed only on glass.
+- Composited screenshots (grim) looked perfect - defect existed only on glass.
 - Shift amount was immune to porch changes, EOT/HSE flags, VOP re-phasing.
   Observed lock states: 35 lines (= vsa 4 + vbp 31) and 120 lines.
 
@@ -30,7 +30,7 @@ it at kernel level:
 
 1. **Vendor U-Boot 2017.09 brings the display up** (draws 720x1280 logo.bmp
    from the resource partition; uses the kernel DTB via
-   `CONFIG_USING_KERNEL_DTB` — its own DTB has no display nodes).
+   `CONFIG_USING_KERNEL_DTB` - its own DTB has no display nodes).
 2. **BSP kernel 4.19.232 does a smooth handover** (`route-dsi0` +
    `drm-logo` reserved memory): it never re-initializes the panel at boot.
 3. The JELOS MOD / plumOS community images reuse vendor U-Boot + BSP kernel
@@ -63,27 +63,27 @@ difference:
 | PHY_TMR_LPCLK (0x98) | 0x00400040 | computed 0x001F0049 | fixed write 0x40/0x40 |
 | Last DCS command (GEN_HDR 0x6c) | 0x2905 (display-on) | 0x1105 (**sleep-out!**) | gate the generic-dsi driver's post-init `display_on + exit_sleep` resend (reversed order!) behind new DT prop `rocknix,no-post-init-cmds` |
 
-Remaining diffs after fix — all benign: 0x4c lbcc ±1 (rounding), 0x68
+Remaining diffs after fix - all benign: 0x4c lbcc ±1 (rounding), 0x68
 CMD_MODE_CFG (command LP/HS routing), 0xa0 bit3 (forcepll), 0xc0 bit7.
 
 Additionally kept (BSP behavior, properly latched): VOP2 VP0 standby bracket
-around DSI enable in `dw-mipi-dsi.c`. NOTE: VOP2 registers are SHADOWED —
+around DSI enable in `dw-mipi-dsi.c`. NOTE: VOP2 registers are SHADOWED -
 any direct write (including the standby bit at 0xfe040c00 bit31) is a NO-OP
 until `0x8001` is written to REG_CFG_DONE (0xfe040000). Our first quirk
 version silently did nothing because of this.
 
 ## Files / persistence
 
-- `dts/rk3566-e5p.dts` — lane-rate, flags 0xa03, `rocknix,no-post-init-cmds`,
-  stock C0 init line (`c00064000e1200640e12` — do not "experiment" with C0:
+- `dts/rk3566-e5p.dts` - lane-rate, flags 0xa03, `rocknix,no-post-init-cmds`,
+  stock C0 init line (`c00064000e1200640e12` - do not "experiment" with C0:
   any deviation moves the lock to the worse 120-line state).
-- `kernel/0101-e5p-display-android-parity.patch` — dw-mipi-dsi.c +
+- `kernel/0101-e5p-display-android-parity.patch` - dw-mipi-dsi.c +
   dw-mipi-dsi-rockchip.c changes; copy into
   `projects/Rockchip/devices/RK3566/patches/linux/` in the build tree.
-- `kernel/panel-generic-dsi.c` — gated post-init resend; replaces
+- `kernel/panel-generic-dsi.c` - gated post-init resend; replaces
   `packages/linux-drivers/generic-dsi/sources/panel-generic-dsi.c`.
 - `docs/data/android_dsi_regs.txt`, `docs/data/rocknix_dsi_regs_fixed.txt`,
-  `docs/data/android_phy_regs.txt` — register dumps (ground truth).
+  `docs/data/android_phy_regs.txt` - register dumps (ground truth).
 
 ## Hard-won debugging lessons
 

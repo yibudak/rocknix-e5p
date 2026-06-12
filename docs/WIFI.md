@@ -153,7 +153,7 @@ ConnMan before normal testing.
 
 ---
 
-## 2026-06 update: NetworkManager+iwd era (20260601 base) — SAE fix
+## 2026-06 update: NetworkManager+iwd era (20260601 base) - SAE fix
 
 ConnMan is gone; the image uses NetworkManager with the iwd backend. The
 WPA3-transition failure resurfaced there and is now FIXED at the driver:
@@ -166,11 +166,11 @@ WPA3-transition failure resurfaced there and is now FIXED at the driver:
 - Fix (fix 7 in `scripts/patch_rtl8733bs_612.py`): drop the SAE feature flag
   in `os_dep/linux/ioctl_cfg80211.c` → iwd falls back to WPA2-PSK → connects.
 - Patch-script gotcha fixed at the same time: `patch()` now checks `new in
-  text` BEFORE replacing — the set_txpower pattern is a substring of its own
+  text` BEFORE replacing - the set_txpower pattern is a substring of its own
   replacement and a rerun used to double-apply it (duplicate `radio_idx`,
   build break).
 - The fix is applied at build time by the patch script, so images built from
   this tree ship the fixed module; no runtime workaround is needed.
 - Seeding pattern for a new network when the device has no working WiFi yet:
   write a NetworkManager keyfile (system-connections) onto the SD STORAGE
-  partition from another machine, then boot — NM picks it up.
+  partition from another machine, then boot - NM picks it up.

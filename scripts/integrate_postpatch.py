@@ -38,7 +38,7 @@ def main() -> int:
         return 1
 
     if "panel-e5p.c" in text:
-        print("E5P integration already present — nothing to do.")
+        print("E5P integration already present - nothing to do.")
         return 0
 
     if ANCHOR not in text:

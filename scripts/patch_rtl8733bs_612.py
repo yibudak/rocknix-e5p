@@ -131,7 +131,7 @@ else:
 
 
 # The "ANDROID COMMON KERNEL" block rewrites every relative -I to an
-# absolute path IF the same dir exists under $(srctree) — and the kernel
+# absolute path IF the same dir exists under $(srctree) - and the kernel
 # tree has its own include/, so the driver -I$(src)/include gets hijacked
 # to the kernel include dir. Compilation runs with cwd = module dir, so
 # the relative paths are fine as-is; disable the block.

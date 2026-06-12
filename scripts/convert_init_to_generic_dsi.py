@@ -5,7 +5,7 @@ panel_description "I" lines.
 Blob format per command: {datatype, wait_ms(hex), payload_len, payload...}
 generic-dsi format: "I seq=<payload hex>[ wait=<hex ms>]"
 (the driver sends seq= items via mipi_dsi_dcs_write_buffer, which picks
-DCS short/long write by length — same behaviour as panel-e5p.c's send loop;
+DCS short/long write by length - same behaviour as panel-e5p.c's send loop;
 wait= is parsed base-16 by simple_strtoul(..., 16)).
 """
 import re

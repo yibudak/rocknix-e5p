@@ -50,8 +50,8 @@ The Generic ROCKNIX image uses `FDTDIR /device_trees` in `extlinux.conf`, which 
 
 After the ROCKNIX splash and EmulationStation UI appear:
 
-1. **Connect to WiFi** — use the on-screen keyboard or plug in a USB keyboard.
-2. **Enable SSH** — ROCKNIX default root password is typically empty or `rocknix`.
+1. **Connect to WiFi** - use the on-screen keyboard or plug in a USB keyboard.
+2. **Enable SSH** - ROCKNIX default root password is typically empty or `rocknix`.
 3. **Verify drivers loaded** over SSH:
    ```bash
    dmesg | grep -i "panel-e5p\|panfrost\|8733bs\|rk817"
