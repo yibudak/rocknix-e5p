@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint:
+    name: Lint shell & Python
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: ShellCheck
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq shellcheck
+          shellcheck -e SC1091 -S warning \
+            scripts/*.sh \
+            "quirks/GameMT E5 Plus/010-led_control" \
+            "quirks/GameMT E5 Plus/050-audio_path" \
+            "quirks/GameMT E5 Plus/bin/"*
+
+      - name: Python syntax check
+        run: python3 -m py_compile scripts/*.py
+
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
