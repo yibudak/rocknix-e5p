@@ -8,6 +8,8 @@
 
 [🕹️ What Works](#️-what-works) · [💾 Install](#-install) · [🔨 Build](#-build-it-yourself) · [📚 Docs](#-documentation)
 
+<img src="docs/images/hero.jpg" width="560" alt="GameMT E5 Plus booting ROCKNIX, joystick LEDs glowing through the transparent shell">
+
 </div>
 
 ---
@@ -48,6 +50,12 @@ Everything below is verified **on real hardware**, not assumed:
 | 🖥️ | Mini-HDMI output | 🧪 Not tested yet | |
 | 🎯 | Emulator deep-testing | 🧪 In progress | PSP, PS1, Dreamcast, N64, SNES, GBA test library |
 | 📳 | Rumble | ❌ No hardware | The board has no vibration motor — not a software issue |
+
+<div align="center">
+
+<img src="docs/images/emulationstation.jpg" width="560" alt="EmulationStation system list running on the E5 Plus">
+
+</div>
 
 ---
 
