@@ -1,4 +1,5 @@
 #!/bin/busybox sh
+# shellcheck shell=dash
 # SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2026  Yiğit Budak <https://github.com/yibudak>
 #
