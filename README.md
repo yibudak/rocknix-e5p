@@ -2,25 +2,9 @@
 
 # 🎮 ROCKNIX for GameMT E5 Plus
 
-<pre>
- .------------------------------------------------------------.
- |   (L)                                              (R)     |
- |          .--------------------------------.                |
- |    _     |                                |      (X)       |
- |  _| |_   |      R  O  C  K  N  I  X       |   (Y)   (A)    |
- | |_   _|  |       GameMT  E5  Plus         |      (B)       |
- |   |_|    |                                |                |
- |          '--------------------------------'                |
- |    (o)      [SELECT]  [START]                  (o)         |
- '------------------------------------------------------------'
-</pre>
-
 **Turn the GameMT E5 Plus handheld into a real Linux retro-gaming console.**
 
-[![CI](https://github.com/yibudak/rocknix-e5p/actions/workflows/ci.yml/badge.svg)](https://github.com/yibudak/rocknix-e5p/actions/workflows/ci.yml)
-[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
-[![Platform](https://img.shields.io/badge/Platform-ROCKNIX-orange.svg)](https://github.com/ROCKNIX/distribution)
-[![SoC](https://img.shields.io/badge/SoC-RK3566-green.svg)](https://www.rock-chips.com/uploads/pdf/2022.8.26/191/RK3566%20Brief%20Datasheet.pdf)
+[![CI](https://github.com/yibudak/rocknix-e5p/actions/workflows/ci.yml/badge.svg)](https://github.com/yibudak/rocknix-e5p/actions/workflows/ci.yml) [![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html) [![Platform](https://img.shields.io/badge/Platform-ROCKNIX-orange.svg)](https://github.com/ROCKNIX/distribution) [![SoC](https://img.shields.io/badge/SoC-RK3566-green.svg)](https://www.rock-chips.com/uploads/pdf/2022.8.26/191/RK3566%20Brief%20Datasheet.pdf)
 
 [🕹️ What Works](#️-what-works) · [💾 Install](#-install) · [🔨 Build](#-build-it-yourself) · [📚 Docs](#-documentation)
 
@@ -175,7 +159,7 @@ See [LICENSE](LICENSE) for the full text.
 
 <div align="center">
 
-Made with ☕ and a multimeter by [**@yibudak**](https://github.com/yibudak)
+Maintained by [**@yibudak**](https://github.com/yibudak)
 
 ⭐ **Star this repo if it helped you!** ⭐
 
