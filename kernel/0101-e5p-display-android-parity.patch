@@ -1,0 +1,147 @@
+--- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+@@ -383,8 +383,8 @@
+ 	 * should be computed according to byte lane, lane number and only
+ 	 * if sending lp cmds in high speed is enable (PHY_TXREQUESTCLKHS)
+ 	 */
+-	dsi_write(dsi, DSI_DPI_LP_CMD_TIM, OUTVACT_LPCMD_TIME(16)
+-		  | INVACT_LPCMD_TIME(4));
++	dsi_write(dsi, DSI_DPI_LP_CMD_TIM, OUTVACT_LPCMD_TIME(4)
++		  | INVACT_LPCMD_TIME(4)); /* E5P: BSP parity */
+ 
+ 	if (msg->flags & MIPI_DSI_MSG_REQ_ACK)
+ 		val |= ACK_RQST_EN;
+@@ -604,7 +604,7 @@
+ 	 * enabling low power is panel-dependent, we should use the
+ 	 * panel configuration here...
+ 	 */
+-	val = ENABLE_LOW_POWER;
++	val = ENABLE_LOW_POWER | ENABLE_LOW_POWER_CMD; /* E5P: Android parity (VID_MODE_CFG=0xBF02) */
+ 
+ 	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST)
+ 		val |= VID_MODE_TYPE_BURST;
+@@ -687,7 +687,7 @@
+ 	 * timeout clock division should be computed with the
+ 	 * high speed transmission counter timeout and byte lane...
+ 	 */
+-	dsi_write(dsi, DSI_CLKMGR_CFG, TO_CLK_DIVISION(0) |
++	dsi_write(dsi, DSI_CLKMGR_CFG, TO_CLK_DIVISION(10) | /* E5P: BSP parity */
+ 		  TX_ESC_CLK_DIVISION(esc_clk_division));
+ }
+ 
+@@ -755,7 +755,7 @@
+ 	 * compute high speed transmission counter timeout according
+ 	 * to the timeout clock division (TO_CLK_DIVISION) and byte lane...
+ 	 */
+-	dsi_write(dsi, DSI_TO_CNT_CFG, HSTX_TO_CNT(0) | LPRX_TO_CNT(0));
++	dsi_write(dsi, DSI_TO_CNT_CFG, HSTX_TO_CNT(1000) | LPRX_TO_CNT(1000)); /* E5P: BSP parity */
+ 	/*
+ 	 * TODO dw drv improvements
+ 	 * the Bus-Turn-Around Timeout Counter should be computed
+@@ -883,6 +883,13 @@
+ 	dsi_write(dsi, DSI_PHY_TMR_LPCLK_CFG,
+ 		  PHY_CLKHS2LP_TIME(timing.clk_hs2lp) |
+ 		  PHY_CLKLP2HS_TIME(timing.clk_lp2hs));
++
++	/* E5P: Android/BSP parity - fixed D-PHY transition budgets
++	 * (PHY_TMR_CFG=0x14102710, PHY_TMR_LPCLK_CFG=0x00400040) */
++	dsi_write(dsi, DSI_PHY_TMR_CFG, PHY_HS2LP_TIME(0x14) |
++		  PHY_LP2HS_TIME(0x10) | MAX_RD_TIME(10000));
++	dsi_write(dsi, DSI_PHY_TMR_LPCLK_CFG, PHY_CLKHS2LP_TIME(0x40) |
++		  PHY_CLKLP2HS_TIME(0x40));
+ }
+ 
+ static void dw_mipi_dsi_dphy_interface_config(struct dw_mipi_dsi *dsi)
+@@ -1022,12 +1029,46 @@
+ 		phy_ops->power_on(dsi->plat_data->priv_data);
+ }
+ 
++/*
++ * RK356x quirk (GameMT E5 Plus port): the vendor BSP holds the VOP2 video
++ * port in standby while the DSI link is configured and switched to video
++ * mode, then releases it, so the controller locks to a fresh frame. Without
++ * this the first frame is captured mid-stream and the image is displayed
++ * with a constant vertical offset of vsa+vbp lines (wrap-around).
++ * Standby takes effect at the end of the current frame.
++ */
++static void dw_mipi_dsi_vop2_standby(bool on)
++{
++	void __iomem *regs;
++	u32 val;
++
++	if (!IS_ENABLED(CONFIG_ARCH_ROCKCHIP))
++		return;
++
++	regs = ioremap(0xfe040000, 0x1000);
++	if (!regs)
++		return;
++	val = readl(regs + 0xc00);	/* VP0_DSP_CTRL */
++	if (on)
++		val |= BIT(31);		/* standby */
++	else
++		val &= ~BIT(31);
++	writel(val, regs + 0xc00);
++	writel(0x8001, regs);	/* E5P: VP0 cfg_done + glb_en - standby bit is shadowed */
++	pr_info("E5P vop2_standby(%d): dsp_ctrl=0x%08x\n", on, readl(regs + 0xc00));
++	iounmap(regs);
++	if (on)
++		msleep(40);		/* let standby latch at frame end */
++}
++
+ static void dw_mipi_dsi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
+ 						 struct drm_atomic_state *state)
+ {
+ 	struct dw_mipi_dsi *dsi = bridge_to_dsi(bridge);
+ 
+ 	/* Power up the dsi ctl into a command mode */
++	dw_mipi_dsi_vop2_standby(true);
++
+ 	dw_mipi_dsi_mode_set(dsi, &dsi->mode);
+ 	if (dsi->slave)
+ 		dw_mipi_dsi_mode_set(dsi->slave, &dsi->mode);
+@@ -1050,6 +1091,8 @@
+ 
+ 	/* Switch to video mode for panel-bridge enable & panel enable */
+ 	dw_mipi_dsi_set_mode(dsi, MIPI_DSI_MODE_VIDEO);
++
++	dw_mipi_dsi_vop2_standby(false);
+ 	if (dsi->slave)
+ 		dw_mipi_dsi_set_mode(dsi->slave, MIPI_DSI_MODE_VIDEO);
+ }
+--- a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
++++ b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
+@@ -585,7 +585,7 @@
+ 	mpclk = DIV_ROUND_UP(mode->clock, MSEC_PER_SEC);
+ 	if (mpclk) {
+ 		/* take 1 / 0.8, since mbps must big than bandwidth of RGB */
+-		tmp = mpclk * (bpp / lanes) * 10 / 8;
++		tmp = mpclk * (bpp / lanes) * 10 / 8; /* E5P: keep host calc consistent with actual PHY rate */
+ 		if (tmp < max_mbps)
+ 			target_mbps = tmp;
+ 		else
+@@ -595,11 +595,25 @@
+ 
+ 	/* for external phy only a the mipi_dphy_config is necessary */
+ 	if (dsi->phy) {
++		u32 fixed_rate;
++
+ 		phy_mipi_dphy_get_default_config(mode->clock * 1000 * 10 / 8,
+ 						 bpp, lanes,
+ 						 &dsi->phy_opts.mipi_dphy);
++		/* E5P: allow BSP-style fixed lane rate from DT (in Mbps).
++		 * Recompute the full D-PHY config for that rate so all
++		 * timing parameters stay consistent. */
++		if (!of_property_read_u32(dsi->dev->of_node,
++					  "rockchip,lane-rate", &fixed_rate)) {
++			target_mbps = fixed_rate;
++			phy_mipi_dphy_get_default_config(
++				DIV_ROUND_UP((unsigned long)fixed_rate * 1000000UL * lanes, bpp),
++				bpp, lanes, &dsi->phy_opts.mipi_dphy);
++		}
+ 		dsi->lane_mbps = target_mbps;
+ 		*lane_mbps = dsi->lane_mbps;
++		dev_info(dsi->dev, "E5P lane_mbps=%u hs_clk=%lu\n",
++			 *lane_mbps, dsi->phy_opts.mipi_dphy.hs_clk_rate);
+ 
+ 		return 0;
+ 	}

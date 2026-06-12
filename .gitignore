@@ -1,0 +1,29 @@
+# Build artifacts
+*.o
+*.ko
+*.cmd
+*.mod
+*.mod.c
+*.order
+*.symvers
+
+# Device tree blobs
+*.dtb
+
+# Image files
+*.img
+*.img.gz
+*.iso
+
+# Logs
+*.log
+
+# macOS
+.DS_Store
+
+# Editor
+*.swp
+*.swo
+*~
+.vscode/
+.idea/

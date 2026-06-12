@@ -1,0 +1,11 @@
+#!/bin/sh
+# SPDX-License-Identifier: GPL-2.0
+# GameMT E5 Plus: 4 plain GPIO LEDs (on/off only, no PWM).
+# Runs after the RK3566 platform quirk and overrides it: keep the LED COLOR
+# menu, hide the BRIGHTNESS menu (hardware can't do brightness).
+
+cat <<EOF >/storage/.config/profile.d/010-led_control
+DEVICE_LED_CONTROL="true"
+DEVICE_LED_BRIGHTNESS="false"
+DEVICE_LED_CHARGING="true"
+EOF

@@ -1,0 +1,52 @@
+#!/bin/sh
+# SPDX-License-Identifier: GPL-2.0
+# GameMT E5 Plus LED control.
+# LEDs: yglled/ygrled = joystick ring (GPIO4_C4/C5), workled+led3 = status.
+# All plain GPIO on/off (max_brightness=1); brightness aliases are accepted
+# but anything non-zero is just "on".
+
+. /etc/profile.d/001-functions
+
+L=/sys/class/leds
+
+set_leds() {
+  # $1 ring (0/1), $2 status (0/1)
+  echo ${1} > ${L}/yglled/brightness
+  echo ${1} > ${L}/ygrled/brightness
+  echo ${2} > ${L}/workled/brightness
+  echo ${2} > ${L}/led3/brightness
+}
+
+apply() {
+  case ${1} in
+    off)    set_leds 0 0 ;;
+    ring)   set_leds 1 0 ;;
+    status) set_leds 0 1 ;;
+    *)      set_leds 1 1 ;;
+  esac
+}
+
+case ${1} in
+  list)
+    cat <<LST
+default
+off
+ring
+status
+LST
+  ;;
+  default)
+    del_setting led.color
+    apply default
+  ;;
+  off|ring|status)
+    set_setting led.color ${1}
+    apply ${1}
+  ;;
+  restore|discharging|charging|brightness)
+    apply "$(get_setting led.color)"
+  ;;
+  poweroff)
+    set_leds 0 0
+  ;;
+esac

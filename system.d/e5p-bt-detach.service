@@ -1,0 +1,12 @@
+[Unit]
+Description=Detach RTL8733BS Bluetooth cleanly before shutdown/reboot
+After=multi-user.target bluetooth.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/true
+ExecStop="/usr/lib/autostart/quirks/devices/GameMT E5 Plus/bin/bt-detach"
+
+[Install]
+WantedBy=multi-user.target

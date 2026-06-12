@@ -1,0 +1,23 @@
+#!/bin/sh
+# SPDX-License-Identifier: GPL-2.0
+# GameMT E5 Plus: clean Bluetooth detach before reboot/shutdown.
+# Rebooting with an active H5 session wedges the RTL8733BS: VBAT survives a
+# warm reboot, the chip keeps its session state and then ignores H5 SYNC
+# until a true poweroff. A clean detach (rmmod -> h5_btrtl_close -> enable
+# GPIO low) leaves it recoverable, so the next boot's attach works.
+# NO systemctl calls here: this runs inside the shutdown transaction and
+# systemctl stop would queue/deadlock. bluetoothd is dying anyway.
+
+model=$(tr -d '\0' < /sys/firmware/devicetree/base/model 2>/dev/null)
+[ "${model}" = "GameMT E5 Plus" ] || exit 0
+
+hciconfig hci0 down 2>/dev/null
+i=0
+while [ $i -lt 10 ]; do
+    rmmod hci_uart 2>/dev/null
+    rmmod btrtl 2>/dev/null
+    lsmod | grep -q "^hci_uart" || exit 0
+    i=$((i+1))
+    sleep 1
+done
+exit 0
