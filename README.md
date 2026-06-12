@@ -2,7 +2,7 @@
 
 <img src="docs/images/banner.jpg" alt="ROCKNIX for GameMT E5 Plus" width="100%">
 
-**Turn the GameMT E5 Plus handheld into a real Linux retro-gaming console.**
+**ROCKNIX for the GameMT E5 Plus handheld - Linux retro gaming, booted from SD card.**
 
 [![CI](https://github.com/yibudak/rocknix-e5p/actions/workflows/ci.yml/badge.svg)](https://github.com/yibudak/rocknix-e5p/actions/workflows/ci.yml) [![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html) [![Platform](https://img.shields.io/badge/Platform-ROCKNIX-orange.svg)](https://github.com/ROCKNIX/distribution) [![SoC](https://img.shields.io/badge/SoC-RK3566-green.svg)](https://www.rock-chips.com/uploads/pdf/2022.8.26/191/RK3566%20Brief%20Datasheet.pdf)
 
@@ -14,32 +14,30 @@
 
 ## 🧐 What is this?
 
-The **GameMT E5 Plus** is a budget retro handheld (Rockchip RK3566, 5" screen)
-that ships with Android. Android is a clunky way to play retro games - so this
-project ports [**ROCKNIX**](https://github.com/ROCKNIX/distribution), the
-open-source Linux gaming distribution, to it.
+The GameMT E5 Plus is a budget retro handheld (Rockchip RK3566, 5" screen)
+that ships with Android. This project ports [ROCKNIX](https://github.com/ROCKNIX/distribution),
+an open-source Linux gaming distribution, to it: EmulationStation, RetroArch
+and dozens of emulators boot from a microSD card.
 
-You get EmulationStation, RetroArch and dozens of emulators booting straight
-from a microSD card. **The internal storage is never touched** - pull the SD
-card out and the device is back on stock Android, like nothing happened.
+The internal storage stays untouched. Pull the SD card and the device boots
+stock Android again.
 
-This is the **first working Linux port** for this device: earlier community
-attempts failed on a wrong CPU-regulator definition that this port fixes,
-along with a custom display driver written from scratch. The technical story
-lives in [docs/PORTING.md](docs/PORTING.md).
+It's the first working Linux port for this device. Earlier community attempts
+failed on a wrong CPU-regulator definition, which this port fixes alongside a
+custom display driver. See [docs/PORTING.md](docs/PORTING.md) for the details.
 
 ---
 
 ## 🕹️ What Works
 
-Everything below is verified **on real hardware**, not assumed:
+Verified on real hardware:
 
 | | Feature | Status | Notes |
 |:---:|:---|:---:|:---|
 | 📺 | Display (5" 720×1280, 60 Hz) | ✅ Works | Custom panel driver, correct colors & orientation |
 | 🎮 | Buttons, D-pad, analog sticks | ✅ Works | Full mapping in EmulationStation & emulators |
 | 🔊 | Speakers & headphone jack | ✅ Works | Auto jack detection, volume tuned to stock levels |
-| 📶 | WiFi (2.4 + 5 GHz) | ✅ Works | Both bands verified; including mixed WPA2/WPA3 home networks |
+| 📶 | WiFi (2.4 + 5 GHz) | ✅ Works | Both bands, including mixed WPA2/WPA3 networks |
 | 🎧 | Bluetooth | ✅ Works | Pairing and BLE scan verified |
 | 🔋 | Battery % & charging | ✅ Works | Calibration data taken from stock firmware |
 | 💡 | LEDs | ✅ Works | On/off control from the settings menu |
@@ -72,14 +70,14 @@ Everything below is verified **on real hardware**, not assumed:
 
 ## 💾 Install
 
-> 📦 Grab the latest `ROCKNIX-RK3566.aarch64-*-E5_Plus.img.7z` from
-> [**Releases**](https://github.com/yibudak/rocknix-e5p/releases). The
-> `E5_Plus` image is preconfigured for this device - no config editing needed.
-> You can also [build it yourself](#-build-it-yourself).
+Grab the latest `ROCKNIX-RK3566.aarch64-*-E5_Plus.img.7z` from
+[Releases](https://github.com/yibudak/rocknix-e5p/releases). The `E5_Plus`
+image is preconfigured for this device, or you can
+[build it yourself](#-build-it-yourself).
 
-You need: a **microSD card** (16 GB+, A1-class recommended).
+You need a microSD card (16 GB+, A1-class recommended).
 
-**1. Extract and flash the image** (macOS/Linux example):
+**1. Extract and flash the image** (macOS/Linux):
 
 ```bash
 7z x ROCKNIX-RK3566.aarch64-*-E5_Plus.img.7z
@@ -87,23 +85,22 @@ sudo dd if=ROCKNIX-RK3566.aarch64-*-E5_Plus.img of=/dev/rdiskX bs=1m status=prog
 ```
 
 **2. Insert the SD card and power on.** ROCKNIX boots into EmulationStation.
-Connect to WiFi, enable SSH if you like, drop your ROMs into `/storage/roms`.
+Connect to WiFi, enable SSH if you want, drop your ROMs into `/storage/roms`.
 
-> ℹ️ If you flash a **Generic** RK3566 image instead, you must edit
+Everything runs from the SD card, so you can't brick the device. Remove the
+card and stock Android boots again. Full walkthrough and troubleshooting:
+[docs/FLASHING.md](docs/FLASHING.md).
+
+> ℹ️ Flashing a **Generic** RK3566 image instead? Edit
 > `extlinux/extlinux.conf` on the SD card's FAT partition and replace the
 > `FDTDIR` line with `FDT /device_trees/rk3566-e5p.dtb` - the E5 Plus isn't
 > in U-Boot's board list. The `E5_Plus` image already has this set.
-
-Detailed walkthrough with troubleshooting: [docs/FLASHING.md](docs/FLASHING.md)
-
-> 🛟 **Can't brick it:** everything runs from the SD card. Remove the card →
-> stock Android boots again.
 
 ---
 
 ## 🔨 Build It Yourself
 
-The full image builds inside ROCKNIX's Docker container. Short version:
+The image builds inside ROCKNIX's Docker container:
 
 ```bash
 # inject the E5P kernel driver + device tree into the ROCKNIX tree
@@ -113,15 +110,15 @@ python3 scripts/integrate_postpatch.py
 PROJECT=Rockchip DEVICE=RK3566 ARCH=aarch64 ./scripts/build_distro
 ```
 
-Full guide - container setup, kernel-only rebuilds, known build gotchas:
-[docs/BUILD.md](docs/BUILD.md)
+Container setup, kernel-only rebuilds and build gotchas are in
+[docs/BUILD.md](docs/BUILD.md).
 
 ---
 
 ## 📚 Documentation
 
-Every subsystem has its own write-up, including how it was debugged - useful
-if you're porting Linux to a similar RK3566 device:
+Each subsystem has its own write-up, including how it was debugged. Useful
+if you're porting Linux to another RK3566 device.
 
 | Doc | What's inside |
 |:---|:---|
@@ -140,9 +137,8 @@ if you're porting Linux to a similar RK3566 device:
 
 ## 🤝 Contributing
 
-Testing on real hardware is the most valuable contribution - flash, play,
-report. Bug reports, documentation fixes and PRs are all welcome.
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+Testing on real hardware helps most: flash, play, report. Bug reports,
+doc fixes and PRs are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
@@ -155,18 +151,17 @@ See [CONTRIBUTING.md](CONTRIBUTING.md).
 See [LICENSE](LICENSE) for the full text.
 
 > ⚠️ **Firmware notice:** `firmware/rtl_bt/rtl8733bs_fw.bin` and
-> `rtl8733bs_config.bin` are proprietary Realtek firmware blobs, extracted
-> from the device's stock Android vendor partition. They are **not** covered
-> by this repository's license; copyright belongs to Realtek Semiconductor
-> Corp. They are redistributed here solely to make the device functional, in
-> the same spirit as the `linux-firmware` tree. If you are a rights holder
-> and object to this distribution, please open an issue.
+> `rtl8733bs_config.bin` are proprietary Realtek blobs extracted from the
+> stock Android vendor partition. They are not covered by this repository's
+> license; copyright belongs to Realtek Semiconductor Corp. They're
+> redistributed here to make the device work, like the `linux-firmware` tree.
+> Rights holders who object can open an issue.
 
 ---
 
 ## 🙏 Acknowledgements
 
-- [**ROCKNIX**](https://github.com/ROCKNIX/distribution) team for the excellent immutable gaming distro
+- [**ROCKNIX**](https://github.com/ROCKNIX/distribution) team for the immutable gaming distro
 - **Powkiddy X55** device tree authors for the RK3566 base
 - **Mainline Linux** `panel-himax-hx8394.c` authors for the driver structure
 
@@ -176,7 +171,7 @@ See [LICENSE](LICENSE) for the full text.
 
 Maintained by [**@yibudak**](https://github.com/yibudak)
 
-⭐ **Star this repo if it helped you!** ⭐
+⭐ **Running ROCKNIX on your E5 Plus? Star the repo - it helps others find it.** ⭐
 
 </div>
 
@@ -184,6 +179,6 @@ Maintained by [**@yibudak**](https://github.com/yibudak)
 
 ## ⚠️ Disclaimer
 
-This is an **unofficial community port**, not affiliated with GameMT or
-ROCKNIX. Use at your own risk. Keep the stock eMMC untouched and boot from
-**SD card only** - that's what makes the whole thing risk-free.
+Unofficial community port, not affiliated with GameMT or ROCKNIX. Use at your
+own risk. It stays low-risk because it boots from SD card only and never
+writes to the stock eMMC.

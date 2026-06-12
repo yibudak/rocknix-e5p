@@ -2,9 +2,9 @@
 
 ## ⚠️ Safety Rule: SD-Only
 
-**Never touch the internal eMMC.** All testing is done from SD card. If the SD card fails to boot, simply remove it and the device will return to stock Android.
+**Never touch the internal eMMC.** Test from SD card. If the card fails to boot, remove it and the device returns to stock Android.
 
-If you ever need to recover the stock eMMC, use the full backup image you made before starting (recommended).
+To recover the stock eMMC, restore the full backup image you made before starting.
 
 ## Flashing to SD Card (macOS)
 

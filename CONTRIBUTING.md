@@ -1,17 +1,16 @@
 # Contributing
 
-Thanks for helping make ROCKNIX on the GameMT E5 Plus better! Any kind of
-contribution is welcome - you don't need to be a kernel developer.
+You don't need to be a kernel developer to help.
 
 ## Ways to help
 
-- **Test on your device.** The most valuable contribution. Flash an image,
-  play games, and report what works and what doesn't.
+- **Test on your device.** This helps most. Flash an image, play games, and
+  report what works and what doesn't.
 - **Report bugs.** Open an issue with: what you did, what you expected,
   what happened, and logs if you can get them
   (`journalctl -b` and `dmesg` over SSH).
-- **Improve documentation.** Typos, unclear steps, missing details - PRs to
-  `docs/` are always appreciated.
+- **Improve documentation.** Typos, unclear steps, missing details - send a
+  PR to `docs/`.
 - **Code.** Kernel patches, device-tree fixes, quirk scripts.
 
 ## Pull requests
