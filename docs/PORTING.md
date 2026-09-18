@@ -64,6 +64,11 @@ run a mainline display stack on this panel before this port.
 - `050-audio_path` - speakers are wired to the HP path through an external
   amp; RK817's SPKOUT pin is unconnected. Forces Playback Mux = HP and the
   Android-equivalent master volume.
+- `060-wifi_regdom` - regulatory.db fails its early boot load (symlink into
+  the kernel-overlay firmware path is not yet resolvable), leaving the device
+  in world domain "00" with 5 GHz crippled. Re-applies the domain at boot
+  (`iw reg reload` + `iw reg set`, default `TR`, override
+  `set_setting wifi.regdom`). Details in [WIFI.md](WIFI.md).
 - `bin/ledcontrol`, `bin/bt-detach` - device-specific helpers picked up by
   ROCKNIX's quirk dispatcher.
 

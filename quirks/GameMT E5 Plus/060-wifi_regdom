@@ -1,0 +1,39 @@
+#!/bin/sh
+# SPDX-License-Identifier: GPL-2.0
+# GameMT E5 Plus WiFi regulatory domain. Board/port quirk: cfg80211 requests
+# regulatory.db during early boot (before the kernel-overlay firmware path is
+# resolvable), so the direct load fails with -2 and the device is stuck in the
+# world domain "00". World "00" marks 5 GHz channels no-IR / DFS passive-only,
+# so 5 GHz scan and association are unreliable and a dual-band AP is sometimes
+# invisible on 5 GHz. The db loads fine post-boot, so re-trigger it here and
+# apply a real country once wlan0/cfg80211 is up.
+#
+# Country defaults to TR; override with: set_setting wifi.regdom <ISO-3166>.
+# A durable alternative is baking regulatory.db into the kernel image via
+# CONFIG_EXTRA_FIRMWARE="regulatory.db"; see docs/WIFI.md.
+
+# get_setting is a shell function, not a binary; quirks run as separate
+# processes, so load it the way the common autostart scripts do.
+. /etc/profile.d/001-functions 2>/dev/null || true
+
+REGDOM="$(get_setting wifi.regdom 2>/dev/null)"
+[ -z "${REGDOM}" ] && REGDOM="TR"
+
+# Only act while stuck in the world domain, so a user-set domain is not clobbered.
+case "$(iw reg get 2>/dev/null | sed -n 's/^country \([A-Z0-9]*\):.*/\1/p' | head -n1)" in
+	00|"") ;;
+	*) exit 0 ;;
+esac
+
+# Wait briefly for the PHY to appear (8733bs auto-loads via SDIO modalias).
+i=0
+while [ ! -e /sys/class/ieee80211/phy0 ] && [ "${i}" -lt 20 ]; do
+	sleep 0.5
+	i=$((i + 1))
+done
+[ -e /sys/class/ieee80211/phy0 ] || exit 0
+
+# Clear the failed boot-time load state, re-read the now-available db, then
+# apply the country so the kernel installs its channel rules.
+iw reg reload 2>/dev/null
+iw reg set "${REGDOM}" 2>/dev/null
