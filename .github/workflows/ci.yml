@@ -20,6 +20,7 @@ jobs:
             scripts/*.sh \
             "quirks/GameMT E5 Plus/010-led_control" \
             "quirks/GameMT E5 Plus/050-audio_path" \
+            "quirks/GameMT E5 Plus/060-wifi_regdom" \
             "quirks/GameMT E5 Plus/bin/"*
 
       - name: Python syntax check

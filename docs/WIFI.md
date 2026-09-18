@@ -175,3 +175,41 @@ WPA3-transition failure resurfaced there and is now FIXED at the driver:
 - Seeding pattern for a new network when the device has no working WiFi yet:
   write a NetworkManager keyfile (system-connections) onto the SD STORAGE
   partition from another machine, then boot - NM picks it up.
+
+## 2026-09 update: regulatory domain stuck at world "00" (5 GHz crippled)
+
+Symptom: on some cold boots the device connects on 2.4 GHz but never sees the
+same dual-band AP on 5 GHz, or "sees no networks" when the router has steered
+the shared SSID to 5 GHz. `iw reg get` shows `country 00: DFS-UNSET`.
+
+Root cause (not a signing problem): `cfg80211` requests `regulatory.db` during
+early boot and the direct firmware load fails:
+
+```text
+faux_driver regulatory: Direct firmware load for regulatory.db failed with error -2
+faux_driver regulatory: Falling back to sysfs fallback for: regulatory.db
+cfg80211: failed to load regulatory.db      # ~60 s later, userspace fallback timeout
+```
+
+The file and its signature are present (`/lib/firmware/regulatory.db` +
+`.p7s`) and the kernel keyring has the `sforshee` key in `.builtin_regdb_keys`
+(`CONFIG_CFG80211_REQUIRE_SIGNED_REGDB=y`, CRDA off). The `-2` (ENOENT) is a
+timing/path race: `/lib/firmware/regulatory.db` is a symlink into
+`/usr/lib/kernel-overlays/base/lib/firmware/`, which is not resolvable at the
+instant cfg80211 does its early load. Post-boot the file resolves fine, so the
+domain can be re-applied from userspace. In world "00" the driver's 5 GHz
+channels carry no-IR / DFS-passive flags, so active scan and association on
+5 GHz are unreliable.
+
+Runtime fix (shipped): device quirk `quirks/GameMT E5 Plus/060-wifi_regdom`
+runs at boot, and when the domain is still "00" it does `iw reg reload`
+(re-reads the now-available db) then `iw reg set "$REGDOM"`. `REGDOM` defaults
+to `TR`; override with `set_setting wifi.regdom <ISO-3166>`. Verified on
+hardware: forcing `iw reg set 00` then running the quirk yields
+`country TR: DFS-ETSI` and the 5 GHz channels lose their no-IR flags.
+
+Durable alternative (kernel): bake the db into the image so it is present the
+instant cfg80211 asks, killing the race - set
+`CONFIG_EXTRA_FIRMWARE="regulatory.db"` (with the file staged in the kernel
+firmware dir) in the RK3566 kernel config. The quirk is the lower-risk fix and
+needs no kernel rebuild.
